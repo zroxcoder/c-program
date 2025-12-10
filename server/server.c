@@ -1,12 +1,12 @@
 #include "server.h"
 #include "client_handler.h"
 
-SOCKET clients[MAX_CLIENTS];
+Client clients[MAX_CLIENTS];
 int client_count = 0;
 
-DWORD WINAPI client_thread(void *sock) {
-    SOCKET client_socket = *(SOCKET*)sock;
-    handle_client(client_socket);
+DWORD WINAPI client_thread(void *arg) {
+    int index = *(int*)arg;
+    handle_client(index);
     return 0;
 }
 
@@ -22,22 +22,35 @@ int main() {
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
     bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr));
-    listen(server_socket, 5);
+    listen(server_socket, 10);
 
-    printf("Server running...\n");
+    printf("[SERVER] Started on port 4444...\n");
 
     while (1) {
         SOCKET client_socket = accept(server_socket, NULL, NULL);
+        if (client_socket == INVALID_SOCKET)
+            continue;
 
-        printf("Client connected.\n");
+        // add client
+        int i;
+        for (i = 0; i < MAX_CLIENTS; i++) {
+            if (!clients[i].active) {
+                clients[i].socket = client_socket;
+                clients[i].active = 1;
+                strcpy(clients[i].username, "Unknown");
+                break;
+            }
+        }
 
-        clients[client_count++] = client_socket;
+        printf("[+] Client connected. Index=%d\n", i);
 
-        HANDLE thread = CreateThread(NULL, 0, client_thread, &client_socket, 0, NULL);
+        int *index = malloc(sizeof(int));
+        *index = i;
+
+        HANDLE thread = CreateThread(NULL, 0, client_thread, index, 0, NULL);
         CloseHandle(thread);
     }
 
     closesocket(server_socket);
     WSACleanup();
-    return 0;
 }
