@@ -12,6 +12,9 @@
 #define BUFFER_SIZE 2048
 #define SERVER_PORT 4444
 
+// -----------------------------------
+// CLIENT STRUCT
+// -----------------------------------
 typedef struct {
     SOCKET socket;
     char username[50];
@@ -22,11 +25,17 @@ typedef struct {
 extern Client clients[MAX_CLIENTS];
 extern int client_count;
 
+// -----------------------------------
+// FEATURE FUNCTIONS
+// -----------------------------------
 void broadcast_channel(const char *msg, const char *channel, SOCKET exclude);
 void send_private(int index, const char *target, const char *msg);
 void kick_user(const char *username);
-void create_admin_console();
 
+// -----------------------------------
+// ADMIN & LOGGING
+// -----------------------------------
+void create_admin_console();
 void log_event(const char *msg);
 
 #endif

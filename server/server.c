@@ -17,7 +17,30 @@ void log_event(const char *msg) {
 }
 
 // ----------------------------
-// MAIN SERVER LOOP
+// ADMIN CONSOLE VISUAL SETUP
+// ----------------------------
+void create_admin_console() {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFOEX info = {0};
+    info.cbSize = sizeof(info);
+
+    GetConsoleScreenBufferInfoEx(hConsole, &info);
+
+    info.ColorTable[0] = RGB(0, 0, 0);
+    info.ColorTable[1] = RGB(255, 0, 0);
+    info.ColorTable[2] = RGB(0, 255, 0);
+    info.ColorTable[3] = RGB(255, 255, 0);
+
+    SetConsoleScreenBufferInfoEx(hConsole, &info);
+
+    SetConsoleTitle("Chat Server - Admin Console");
+
+    printf("[ADMIN] Console Initialized...\n");
+    log_event("[ADMIN] Console Initialized");
+}
+
+// ----------------------------
+// CLIENT THREAD WRAPPER
 // ----------------------------
 DWORD WINAPI client_thread(void *arg) {
     int index = *(int*)arg;
@@ -26,6 +49,9 @@ DWORD WINAPI client_thread(void *arg) {
     return 0;
 }
 
+// ----------------------------
+// MAIN SERVER START
+// ----------------------------
 int main() {
     WSADATA wsa;
     WSAStartup(MAKEWORD(2,2), &wsa);
@@ -44,10 +70,13 @@ int main() {
     log_event("SERVER STARTED");
 
     // ----------------------------
-    // ADMIN CONSOLE THREAD
+    // ADMIN CONSOLE SETUP
     // ----------------------------
     create_admin_console();
 
+    // ----------------------------
+    // ACCEPT LOOP
+    // ----------------------------
     while (1) {
         SOCKET client_socket = accept(server_socket, NULL, NULL);
         if (client_socket == INVALID_SOCKET)
@@ -58,13 +87,19 @@ int main() {
             if (!clients[i].active) {
                 clients[i].socket = client_socket;
                 clients[i].active = 1;
+
                 strcpy(clients[i].username, "Unknown");
                 strcpy(clients[i].channel, "general");
+
                 break;
             }
         }
 
         printf("[+] Client connected. Index=%d\n", i);
+
+        char log_msg[128];
+        sprintf(log_msg, "Client Connected | Index=%d", i);
+        log_event(log_msg);
 
         int *client_index = malloc(sizeof(int));
         *client_index = i;
