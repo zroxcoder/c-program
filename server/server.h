@@ -6,24 +6,27 @@
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_CLIENTS 10
 #define BUFFER_SIZE 2048
+#define SERVER_PORT 4444
 
 typedef struct {
     SOCKET socket;
     char username[50];
+    char channel[50];
     int active;
 } Client;
 
 extern Client clients[MAX_CLIENTS];
 extern int client_count;
 
-DWORD WINAPI client_thread(void *socket);
+void broadcast_channel(const char *msg, const char *channel, SOCKET exclude);
+void send_private(int index, const char *target, const char *msg);
+void kick_user(const char *username);
+void create_admin_console();
 
-void broadcast(const char *msg, SOCKET exclude);
-
-void broadcast_file_header(const char *header, SOCKET exclude);
-void broadcast_file_data(const char *data, int len, SOCKET exclude);
+void log_event(const char *msg);
 
 #endif

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <winsock2.h>
 #include <windows.h>
-#include <process.h>   // for _beginthreadex
+#include <process.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -12,9 +12,23 @@
 
 SOCKET sock;
 
-// -------------------------------
+// ---------------------
+// SAVE RECEIVED FILE
+// ---------------------
+void save_file(const char *filename, const char *data, int len) {
+    char path[200];
+    sprintf(path, "downloads/%s", filename);
+
+    FILE *fp = fopen(path, "ab");
+    if (fp) {
+        fwrite(data, 1, len, fp);
+        fclose(fp);
+    }
+}
+
+// ---------------------
 // RECEIVE THREAD
-// -------------------------------
+// ---------------------
 unsigned __stdcall receive_messages(void *arg) {
     char buffer[2048];
 
@@ -22,62 +36,50 @@ unsigned __stdcall receive_messages(void *arg) {
         memset(buffer, 0, sizeof(buffer));
         int bytes = recv(sock, buffer, sizeof(buffer), 0);
 
-        if (bytes <= 0) {
-            printf("\n[!] Disconnected from server.\n");
-            exit(0);
-        }
+        if (bytes <= 0) exit(0);
 
-        printf("\n%s\n", buffer);
-        printf("> ");
+        printf("\n%s\n> ", buffer);
         fflush(stdout);
     }
-
     return 0;
 }
 
-// -------------------------------
-// SEND FILE TO SERVER
-// -------------------------------
-void send_file(const char *filepath) {
-    FILE *fp = fopen(filepath, "rb");
+// ---------------------
+// SEND FILE
+// ---------------------
+void send_file(const char *path) {
+    FILE *fp = fopen(path, "rb");
     if (!fp) {
-        printf("[X] Could not open file.\n");
+        printf("Cannot open file.\n");
         return;
     }
 
-    // Extract filename from path
-    const char *filename = strrchr(filepath, '\\');
-    if (!filename) filename = filepath;
-    else filename++;
+    char header[200];
+    const char *name = strrchr(path, '\\');
+    if (!name) name = strrchr(path, '/');
+    if (!name) name = path; else name++;
 
-    char header[512];
-    snprintf(header, sizeof(header), "FILE|%s", filename);
-
+    sprintf(header, "FILE|%s", name);
     send(sock, header, strlen(header), 0);
     Sleep(100);
 
-    printf("[+] Sending file: %s\n", filename);
-
     char chunk[1024];
-    int bytes;
+    int b;
 
-    while ((bytes = fread(chunk, 1, sizeof(chunk), fp)) > 0) {
-        send(sock, chunk, bytes, 0);
-        Sleep(5); // prevent packet flooding
+    while ((b = fread(chunk, 1, sizeof(chunk), fp)) > 0) {
+        send(sock, chunk, b, 0);
     }
 
     send(sock, "FILE_END", 8, 0);
     fclose(fp);
-
-    printf("[+] File transfer complete.\n");
 }
 
-// -------------------------------
+// ---------------------
 // MAIN
-// -------------------------------
+// ---------------------
 int main() {
     WSADATA wsa;
-    WSAStartup(MAKEWORD(2, 2), &wsa);
+    WSAStartup(MAKEWORD(2,2), &wsa);
 
     sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -86,40 +88,26 @@ int main() {
     server.sin_port = htons(SERVER_PORT);
     server.sin_addr.s_addr = inet_addr(SERVER_IP);
 
-    if (connect(sock, (struct sockaddr*)&server, sizeof(server)) == SOCKET_ERROR) {
-        printf("[X] Could not connect.\n");
-        return 1;
-    }
+    connect(sock, (struct sockaddr*)&server, sizeof(server));
+    printf("Connected to server.\n");
 
-    printf("[+] Connected to server.\n");
-
-    // -------------------------------
-    // ASK USERNAME
-    // -------------------------------
     char username[50];
-    printf("Enter username: ");
-    fgets(username, sizeof(username), stdin);
+    printf("Username: ");
+    fgets(username, 50, stdin);
     username[strcspn(username, "\n")] = 0;
 
-    char login_packet[100];
-    snprintf(login_packet, sizeof(login_packet), "LOGIN|%s", username);
-    send(sock, login_packet, strlen(login_packet), 0);
+    char pkt[100];
+    sprintf(pkt, "LOGIN|%s", username);
+    send(sock, pkt, strlen(pkt), 0);
 
-    // -------------------------------
-    // START RECEIVE THREAD
-    // -------------------------------
-    unsigned threadID;
-    HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, receive_messages, NULL, 0, &threadID);
-    CloseHandle(hThread);
+    unsigned id;
+    HANDLE t = (HANDLE)_beginthreadex(NULL, 0, receive_messages, NULL, 0, &id);
+    CloseHandle(t);
 
-    // -------------------------------
-    // MAIN LOOP (SEND CHAT/FILE)
-    // -------------------------------
     char input[1024];
-
     while (1) {
         printf("> ");
-        fgets(input, sizeof(input), stdin);
+        fgets(input, 1024, stdin);
 
         if (strncmp(input, "/file ", 6) == 0) {
             input[strcspn(input, "\n")] = 0;
@@ -129,8 +117,4 @@ int main() {
 
         send(sock, input, strlen(input), 0);
     }
-
-    closesocket(sock);
-    WSACleanup();
-    return 0;
 }
