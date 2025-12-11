@@ -8,6 +8,7 @@
 #pragma comment(lib, "ws2_32.lib")
 
 #define SERVER_IP "192.168.1.71"
+
 #define SERVER_PORT 4444
 
 SOCKET sock;
