@@ -3,22 +3,19 @@
 
 #include <winsock2.h>
 #include <windows.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
+#include <stdint.h>
+#include "server.h"
 
-void handle_client(int client_index);
+// Send / receive framed messages
+int send_msg_sock(SOCKET s, const void *buf, uint32_t len);
+int recv_msg_sock(SOCKET s, char **out, uint32_t *out_len);
 
-// Timestamp
-void make_timestamp(char *out);
+// Thread wrapper declaration
+DWORD WINAPI client_thread_wrapper(LPVOID arg);
 
-// Channel broadcasting
+// Client handling
 void broadcast_channel(const char *msg, const char *channel, SOCKET exclude);
-
-// Private message
 void send_private(int index, const char *target, const char *msg);
-
-// Kick user
-void kick_user(const char *username);
+void handle_client(int index);
 
 #endif

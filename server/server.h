@@ -5,37 +5,37 @@
 #include <ws2tcpip.h>
 #include <windows.h>
 #include <stdio.h>
-#include <string.h>
-#include <time.h>
 
-#define MAX_CLIENTS 10
-#define BUFFER_SIZE 2048
+#define MAX_CLIENTS 64
+#define BUFFER_SIZE 4096
 #define SERVER_PORT 4444
+#define MAX_CHANNELS 32
+#define HISTORY_COUNT 50
 
-// -----------------------------------
-// CLIENT STRUCT
-// -----------------------------------
+typedef struct {
+    char name[64];
+    char password[64]; // empty = public
+    int user_count;
+    char history[HISTORY_COUNT][BUFFER_SIZE];
+    int history_count;
+} Channel;
+
 typedef struct {
     SOCKET socket;
-    char username[50];
-    char channel[50];
+    char username[64];
+    char channel[64];
     int active;
+    int muted;
+    DWORD threadId;
 } Client;
 
 extern Client clients[MAX_CLIENTS];
 extern int client_count;
 
-// -----------------------------------
-// FEATURE FUNCTIONS
-// -----------------------------------
-void broadcast_channel(const char *msg, const char *channel, SOCKET exclude);
-void send_private(int index, const char *target, const char *msg);
-void kick_user(const char *username);
+extern Channel channels[MAX_CHANNELS];
+extern int channel_count;
 
-// -----------------------------------
-// ADMIN & LOGGING
-// -----------------------------------
-void create_admin_console();
 void log_event(const char *msg);
+void make_timestamp(char *out);
 
 #endif

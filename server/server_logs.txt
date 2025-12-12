@@ -22,3 +22,188 @@ SERVER STARTED
 [ADMIN] Console Initialized
 Client Connected | Index=0
 Client Connected | Index=1
+[2025-12-11 22:55:19] SERVER STARTED
+[2025-12-11 23:01:32] Client connected. Index=0 Socket=240
+[2025-12-11 23:04:11] Client disconnected: index=0 user=Unknown
+[2025-12-11 23:05:04] Client connected. Index=0 Socket=240
+[2025-12-11 23:05:23] Client connected. Index=1 Socket=108
+[2025-12-11 23:05:49] Client disconnected: index=0 user=Unknown
+[2025-12-11 23:06:47] Client connected. Index=0 Socket=244
+[2025-12-11 23:07:14] Client disconnected: index=0 user=Unknown
+[2025-12-12 00:09:08] SERVER STARTED
+[2025-12-12 00:09:37] Admin broadcast sent
+[2025-12-12 00:10:14] Client connected. Index=0 Socket=220
+[2025-12-12 00:10:37] Admin broadcast sent
+[2025-12-12 00:13:56] Client connected. Index=1 Socket=244
+[2025-12-12 00:14:46] Client connected. Index=2 Socket=264
+[2025-12-12 00:15:04] Admin broadcast sent
+[2025-12-12 00:37:33] SERVER STARTED
+[2025-12-12 00:42:14] Admin broadcast sent
+[2025-12-12 00:42:31] Admin kicked: ayush
+[2025-12-12 00:42:38] Admin kicked: zrox
+[2025-12-12 00:47:06] Admin broadcast sent
+[2025-12-12 00:47:15] Admin kicked: zrox
+[2025-12-12 00:55:43] SERVER STARTED
+[2025-12-12 00:56:22] LOGIN: index=0 name=ayush
+[2025-12-12 00:57:40] LOGIN: index=1 name=zrox
+[2025-12-12 00:57:54] MSG from zrox: hii
+[2025-12-12 00:58:03] MSG from zrox: yoo
+[2025-12-12 00:58:06] MSG from ayush: hii
+[2025-12-12 00:58:14] MSG from ayush: nothing
+[2025-12-12 00:58:19] MSG from zrox: yeah maybe
+[2025-12-12 00:58:24] MSG from ayush: suree
+[2025-12-12 00:58:28] MSG from ayush: i will 
+[2025-12-12 00:58:43] MSG from zrox: /create paly
+[2025-12-12 00:58:49] [SERVER] zrox moved from general to play
+[2025-12-12 00:58:55] MSG from zrox: hii
+[2025-12-12 00:59:03] [SERVER] ayush moved from general to play
+[2025-12-12 00:59:07] MSG from ayush: yoo
+[2025-12-12 00:59:17] MSG from ayush: what's up dude
+[2025-12-12 00:59:22] MSG from ayush: /leave
+[2025-12-12 00:59:29] [SERVER] ayush moved from play to general
+[2025-12-12 00:59:38] MSG from ayush: /create voice
+[2025-12-12 00:59:42] [SERVER] ayush moved from general to voice
+[2025-12-12 00:59:45] MSG from ayush: hii
+[2025-12-12 00:59:51] [SERVER] zrox moved from play to voice
+[2025-12-12 00:59:55] MSG from zrox: hii
+[2025-12-12 01:00:34] Admin broadcast: hii
+[2025-12-12 01:21:59] SERVER STARTED
+[2025-12-12 01:22:31] LOGIN: index=0 name=ayush
+[2025-12-12 01:23:04] LOGIN: index=1 name=zrox
+[2025-12-12 01:24:26] LOGIN: index=2 name=ezon
+[2025-12-12 01:27:13] MSG from ayush: hii
+[2025-12-12 01:27:19] MSG from ayush: uoo
+[2025-12-12 01:27:26] MSG from ayush: /create play
+[2025-12-12 01:27:38] [SERVER] ayush moved from general to play|123
+[2025-12-12 01:27:50] [SERVER] ezon moved from general to play|321
+[2025-12-12 01:27:55] MSG from ezon: gif
+[2025-12-12 01:27:57] MSG from ezon: hdsgfh
+[2025-12-12 01:27:58] MSG from ezon: fdgfd
+[2025-12-12 01:27:59] MSG from ezon: fdshgfy
+[2025-12-12 01:28:06] Client disconnected: index=2 user=ezon
+[2025-12-12 01:28:27] LOGIN: index=2 name=ezon
+[2025-12-12 01:28:38] [SERVER] ezon moved from play|321 to play|123
+[2025-12-12 01:28:40] MSG from ezon: fsdh
+[2025-12-12 01:28:41] MSG from ezon: dvhdsf
+[2025-12-12 01:28:42] MSG from ezon: dshgfhd
+[2025-12-12 01:28:43] MSG from ezon: dhsgfs
+[2025-12-12 01:28:44] MSG from ezon: fdsgfy
+[2025-12-12 01:28:45] MSG from ezon: dsfdgfj
+[2025-12-12 01:28:46] MSG from ezon: dsdfhgsdyf
+[2025-12-12 01:28:47] MSG from ezon: ffjhdsfh
+[2025-12-12 01:28:48] MSG from ezon: fhdsfhdsd
+[2025-12-12 01:28:49] MSG from ezon: dsgfgdss
+[2025-12-12 01:28:50] MSG from ezon: dhfhvdhsf
+[2025-12-12 01:28:51] MSG from ezon: bhjdsgfds
+[2025-12-12 01:28:53] MSG from ezon: fdsfhdsfghf
+[2025-12-12 01:28:56] MSG from ezon: dhgfdshgfgdsfg
+[2025-12-12 01:28:57] MSG from ezon: dshfgfh
+[2025-12-12 01:28:58] MSG from ezon: dfhdsgf
+[2025-12-12 01:28:59] MSG from ezon: dshfdhjs
+[2025-12-12 01:29:00] MSG from ezon: hfgdf
+[2025-12-12 01:29:00] MSG from ezon: fhjdshf
+[2025-12-12 01:29:05] MSG from ezon: /list
+[2025-12-12 01:29:09] MSG from ezon: /help
+[2025-12-12 01:29:24] [SERVER] ezon moved from play|123 to general|123
+[2025-12-12 01:29:26] MSG from ezon: dhfb
+[2025-12-12 01:29:28] MSG from ezon: fbdsb
+[2025-12-12 01:29:33] MSG from zrox: fd
+[2025-12-12 01:29:34] MSG from zrox: dbf
+[2025-12-12 23:40:54] SERVER STARTED
+[2025-12-12 23:41:20] LOGIN: index=0 name=ayush
+[2025-12-12 23:41:48] LOGIN: index=1 name=zrox
+[2025-12-12 23:41:53] MSG from zrox: hii
+[2025-12-12 23:42:00] MSG from zrox: /list
+[2025-12-12 23:42:16] MSG from zrox: hii
+[2025-12-12 23:42:37] Admin muted: ayush
+[2025-12-12 23:42:41] MSG from ayush: hii
+[2025-12-12 23:42:43] MSG from ayush: hii
+[2025-12-12 23:42:56] MSG from ayush: hii
+[2025-12-12 23:42:57] MSG from ayush: hu
+[2025-12-12 23:43:02] Admin muted: ayush
+[2025-12-12 23:43:05] MSG from zrox: gjig
+[2025-12-12 23:43:06] MSG from zrox: fhuirhf
+[2025-12-12 23:43:08] MSG from zrox: hwg
+[2025-12-12 23:43:09] MSG from zrox: gr
+[2025-12-12 23:43:12] MSG from ayush: fwegy
+[2025-12-12 23:43:14] MSG from ayush: gfegf
+[2025-12-12 23:43:15] MSG from ayush: fgf
+[2025-12-12 23:43:16] MSG from ayush: fhgeyf
+[2025-12-12 23:43:18] MSG from ayush: fhgwefg
+[2025-12-12 23:43:19] MSG from ayush: ugf
+[2025-12-12 23:43:21] MSG from zrox: gfwefh
+[2025-12-12 23:43:23] MSG from zrox: ffhkjfh
+[2025-12-12 23:43:24] MSG from zrox: kfgwef
+[2025-12-12 23:43:25] MSG from zrox: jefguifh
+[2025-12-12 23:43:26] MSG from zrox: kfwgehg
+[2025-12-12 23:43:27] MSG from zrox: edhwgeg
+[2025-12-12 23:43:28] MSG from zrox: hfhuierhf
+[2025-12-12 23:43:33] Admin unmuted: ayush
+[2025-12-12 23:43:35] MSG from zrox: fwge
+[2025-12-12 23:43:36] MSG from zrox: dugwed
+[2025-12-12 23:43:37] MSG from zrox: dwdg
+[2025-12-12 23:43:44] Admin broadcast: hii
+[2025-12-12 23:44:32] MSG from ayush: hii
+[2025-12-12 23:44:39] MSG from ayush: /create play
+[2025-12-12 23:44:46] [SERVER] ayush moved from general to play|
+[2025-12-12 23:44:49] MSG from ayush: yef
+[2025-12-12 23:44:50] MSG from ayush: dhgegu
+[2025-12-12 23:44:52] MSG from ayush: dgfdy
+[2025-12-12 23:44:53] MSG from ayush: wgdehg
+[2025-12-12 23:44:54] MSG from ayush: edgf
+[2025-12-12 23:45:06] [SERVER] ayush moved from play| to general|
+[2025-12-12 23:45:08] MSG from ayush: gfdyeg
+[2025-12-12 23:45:09] MSG from ayush: hdgeyg
+[2025-12-12 23:45:10] MSG from ayush: heguy
+[2025-12-12 23:45:23] MSG from zrox: g
+[2025-12-12 23:45:24] MSG from zrox: fguf
+[2025-12-12 23:45:25] MSG from zrox: iufug
+[2025-12-12 23:45:27] MSG from zrox: jgfy
+[2025-12-12 23:45:28] MSG from zrox: fet
+[2025-12-12 23:45:29] MSG from zrox: 'dye
+[2025-12-12 23:45:30] MSG from zrox: dyedyg
+[2025-12-12 23:45:31] MSG from zrox: egyd
+[2025-12-12 23:45:37] MSG from zrox: eftbdycbedgyydbdggkhgudthwfy
+[2025-12-12 23:45:39] MSG from zrox: egdyg
+[2025-12-12 23:45:40] MSG from zrox: chdg
+[2025-12-12 23:45:40] MSG from zrox: hwdgf'
+[2025-12-12 23:45:41] MSG from zrox: 'kjdjhgffh
+[2025-12-12 23:45:42] MSG from zrox: 'hjk
+[2025-12-12 23:45:42] MSG from zrox: ';f
+[2025-12-12 23:45:43] MSG from zrox: f
+[2025-12-12 23:45:43] MSG from zrox: f
+[2025-12-12 23:45:43] MSG from zrox: ff
+[2025-12-12 23:45:44] MSG from zrox: ff
+[2025-12-12 23:45:44] MSG from zrox: f
+[2025-12-12 23:45:44] MSG from zrox: f
+[2025-12-12 23:45:45] MSG from zrox: f
+[2025-12-12 23:45:45] MSG from zrox: f
+[2025-12-12 23:45:45] MSG from zrox: f
+[2025-12-12 23:45:46] MSG from zrox: f
+[2025-12-12 23:45:46] MSG from zrox: f
+[2025-12-12 23:45:46] MSG from zrox: f
+[2025-12-12 23:45:46] MSG from zrox: f
+[2025-12-12 23:45:46] MSG from zrox: f
+[2025-12-12 23:45:47] MSG from zrox: f
+[2025-12-12 23:45:47] MSG from zrox: f
+[2025-12-12 23:45:47] MSG from zrox: f
+[2025-12-12 23:45:47] MSG from zrox: f
+[2025-12-12 23:45:48] MSG from zrox: f
+[2025-12-12 23:45:48] MSG from zrox: f
+[2025-12-12 23:45:49] MSG from zrox: f
+[2025-12-12 23:45:49] MSG from zrox: f
+[2025-12-12 23:45:49] MSG from zrox: f
+[2025-12-12 23:45:49] MSG from zrox: f
+[2025-12-12 23:45:50] MSG from zrox: f
+[2025-12-12 23:45:50] MSG from zrox: f
+[2025-12-12 23:45:50] MSG from zrox: f
+[2025-12-12 23:45:50] MSG from zrox: f
+[2025-12-12 23:45:51] MSG from zrox: f
+[2025-12-12 23:45:51] MSG from zrox: f
+[2025-12-12 23:45:51] MSG from zrox: f
+[2025-12-12 23:45:51] MSG from zrox: f
+[2025-12-12 23:45:52] MSG from zrox: f
+[2025-12-12 23:45:52] MSG from zrox: f
+[2025-12-12 23:45:52] MSG from zrox: f
+[2025-12-12 23:45:53] MSG from zrox: f
+[2025-12-12 23:45:53] MSG from zrox: f

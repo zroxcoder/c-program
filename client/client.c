@@ -1,121 +1,102 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <winsock2.h>
 #include <windows.h>
-#include <process.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-#pragma comment(lib, "ws2_32.lib")
-
-#define SERVER_IP "192.168.1.71"
-
+#define BUFFER_SIZE 4096
 #define SERVER_PORT 4444
 
-SOCKET sock;
+SOCKET server_socket;
 
-// ---------------------
-// SAVE RECEIVED FILE
-// ---------------------
-void save_file(const char *filename, const char *data, int len) {
-    char path[200];
-    sprintf(path, "downloads/%s", filename);
-
-    FILE *fp = fopen(path, "ab");
-    if (fp) {
-        fwrite(data, 1, len, fp);
-        fclose(fp);
+DWORD WINAPI recv_thread(LPVOID arg){
+    (void)arg;
+    while(1){
+        uint32_t netlen; int r=recv(server_socket,(char*)&netlen,sizeof(netlen),MSG_WAITALL);
+        if(r<=0) break;
+        uint32_t len=ntohl(netlen);
+        char *buf=malloc(len+1); if(!buf) break;
+        uint32_t total=0;
+        while(total<len){
+            int got=recv(server_socket,buf+total,len-total,0);
+            if(got<=0) break;
+            total+=got;
+        }
+        buf[len]=0; printf("%s\n",buf); free(buf);
     }
-}
-
-// ---------------------
-// RECEIVE THREAD
-// ---------------------
-unsigned __stdcall receive_messages(void *arg) {
-    char buffer[2048];
-
-    while (1) {
-        memset(buffer, 0, sizeof(buffer));
-        int bytes = recv(sock, buffer, sizeof(buffer), 0);
-
-        if (bytes <= 0) exit(0);
-
-        printf("\n%s\n> ", buffer);
-        fflush(stdout);
-    }
+    printf("Disconnected from server.\n");
     return 0;
 }
 
-// ---------------------
-// SEND FILE
-// ---------------------
-void send_file(const char *path) {
-    FILE *fp = fopen(path, "rb");
-    if (!fp) {
-        printf("Cannot open file.\n");
-        return;
-    }
-
-    char header[200];
-    const char *name = strrchr(path, '\\');
-    if (!name) name = strrchr(path, '/');
-    if (!name) name = path; else name++;
-
-    sprintf(header, "FILE|%s", name);
-    send(sock, header, strlen(header), 0);
-    Sleep(100);
-
-    char chunk[1024];
-    int b;
-
-    while ((b = fread(chunk, 1, sizeof(chunk), fp)) > 0) {
-        send(sock, chunk, b, 0);
-    }
-
-    send(sock, "FILE_END", 8, 0);
-    fclose(fp);
+int send_msg(const char *msg){
+    uint32_t len=(uint32_t)strlen(msg); uint32_t netlen=htonl(len);
+    if(send(server_socket,(char*)&netlen,sizeof(netlen),0)!=sizeof(netlen)) return -1;
+    if(send(server_socket,msg,len,0)!=(int)len) return -1;
+    return 0;
 }
 
-// ---------------------
-// MAIN
-// ---------------------
-int main() {
-    WSADATA wsa;
-    WSAStartup(MAKEWORD(2,2), &wsa);
+int main(){
+    WSADATA wsa; if(WSAStartup(MAKEWORD(2,2),&wsa)!=0){ printf("WSAStartup failed\n"); return 1;}
+    server_socket=socket(AF_INET,SOCK_STREAM,0);
+    if(server_socket==INVALID_SOCKET){ printf("Socket failed\n"); return 1;}
 
-    sock = socket(AF_INET, SOCK_STREAM, 0);
+    char ip[64]; printf("Enter server IP: "); scanf("%63s",ip); getchar();
+    struct sockaddr_in addr={0}; addr.sin_family=AF_INET; addr.sin_port=htons(SERVER_PORT);
+    addr.sin_addr.s_addr=inet_addr(ip);
 
-    struct sockaddr_in server;
-    server.sin_family = AF_INET;
-    server.sin_port = htons(SERVER_PORT);
-    server.sin_addr.s_addr = inet_addr(SERVER_IP);
+    if(connect(server_socket,(struct sockaddr*)&addr,sizeof(addr))!=0){ printf("Connect failed\n"); return 1;}
 
-    connect(sock, (struct sockaddr*)&server, sizeof(server));
-    printf("Connected to server.\n");
+    char username[64]; printf("Enter username: "); fgets(username,sizeof(username),stdin);
+    username[strcspn(username,"\r\n")]=0;
+    char loginmsg[BUFFER_SIZE]; snprintf(loginmsg,sizeof(loginmsg),"LOGIN|%s",username); send_msg(loginmsg);
 
-    char username[50];
-    printf("Username: ");
-    fgets(username, 50, stdin);
-    username[strcspn(username, "\n")] = 0;
+    HANDLE hRecv=CreateThread(NULL,0,recv_thread,NULL,0,NULL);
 
-    char pkt[100];
-    sprintf(pkt, "LOGIN|%s", username);
-    send(sock, pkt, strlen(pkt), 0);
+    char input[BUFFER_SIZE];
+    while(1){
+        if(!fgets(input,sizeof(input),stdin)) continue;
+        input[strcspn(input,"\r\n")]=0; if(strcmp(input,"")==0) continue;
 
-    unsigned id;
-    HANDLE t = (HANDLE)_beginthreadex(NULL, 0, receive_messages, NULL, 0, &id);
-    CloseHandle(t);
-
-    char input[1024];
-    while (1) {
-        printf("> ");
-        fgets(input, 1024, stdin);
-
-        if (strncmp(input, "/file ", 6) == 0) {
-            input[strcspn(input, "\n")] = 0;
-            send_file(input + 6);
-            continue;
+        // /join [channel] prompt
+        if(strncmp(input,"/join ",6)==0){
+            char channel[64]; strcpy(channel,input+6);
+            printf("Do you want to create private channel? (y/n): "); char ans=getchar(); getchar();
+            if(ans=='y'){
+                char psw[64]; printf("Enter password: "); fgets(psw,sizeof(psw),stdin); psw[strcspn(psw,"\r\n")]=0;
+                char msg[BUFFER_SIZE]; snprintf(msg,sizeof(msg),"JOIN|%s|%s",channel,psw); send_msg(msg); continue;
+            } else {
+                char msg[BUFFER_SIZE]; snprintf(msg,sizeof(msg),"JOIN|%s|",channel); send_msg(msg); continue;
+            }
         }
 
-        send(sock, input, strlen(input), 0);
+        // /pm
+        if(strncmp(input,"/pm ",4)==0){
+            char *space=strchr(input+4,' '); if(!space){ printf("Usage: /pm <user> <msg>\n"); continue;}
+            *space=0; char *target=input+4; char *msgptr=space+1;
+            char msg[BUFFER_SIZE]; snprintf(msg,sizeof(msg),"PM|%s|%s",target,msgptr); send_msg(msg); continue;
+        }
+
+        // /nick
+        if(strncmp(input,"/nick ",6)==0){
+            char msg[BUFFER_SIZE]; snprintf(msg,sizeof(msg),"NICK|%s",input+6); send_msg(msg); continue;
+        }
+
+        // /channels
+        if(strcmp(input,"/channels")==0){
+            char msg[BUFFER_SIZE]; snprintf(msg,sizeof(msg),"CHANNELS|"); send_msg(msg); continue;
+        }
+
+        // /users
+        if(strncmp(input,"/users ",7)==0){
+            char msg[BUFFER_SIZE]; snprintf(msg,sizeof(msg),"USERS|%s",input+7); send_msg(msg); continue;
+        }
+
+        if(strcmp(input,"/quit")==0) break;
+
+        // normal message
+        char msg[BUFFER_SIZE]; snprintf(msg,sizeof(msg),"MSG|%s",input); send_msg(msg);
     }
+
+    closesocket(server_socket); WSACleanup(); return 0;
 }
